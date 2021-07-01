@@ -6,13 +6,13 @@ import doma.databaza.domena.Task;
 import java.util.List;
 
 public interface TaskServices {
+    List<Task> getAllTasks ();
+    Task getTaskById (Integer id);
+    Integer addTask (Task task);
+    void deleteTask (Integer id);
+    void updateTask (Integer id, Task task);
 
-    List <Task> list ();
-    Task vratTask (Integer id);
-    Integer pridajTask (Task task);
-    void aktualizujTask (Integer id, Task task);
-    void vymazTask (Integer id);
-    void vymazTask2 (Integer id);
+
 
 
 

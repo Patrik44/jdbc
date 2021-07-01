@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin (origins = "http://localhost:3000")
 @RequestMapping ("task")
 @RestController
 public class TaskRestController  {
@@ -22,24 +23,26 @@ public class TaskRestController  {
     }
 
     @PostMapping
-    public ResponseEntity add (@RequestBody Task task){
-        Integer id = taskServices.pridajTask(task);
+    public ResponseEntity addTask (@RequestBody Task task){
+        Integer id = taskServices.addTask(task);
+
         if (id != null){
             return new ResponseEntity<>(id, HttpStatus.CREATED);
         }else {
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    public ResponseEntity list (){
-        List <Task> list = taskServices.list();
-        return new ResponseEntity<> (list, HttpStatus.OK);
+    public ResponseEntity getAll (){
+        List <Task> tasks = taskServices.getAllTasks();
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
+
 
     @GetMapping ("{id}")
     public ResponseEntity getTask (@PathVariable ("id") int id){
-        Task task = taskServices.vratTask(id);
+        Task task = taskServices.getTaskById(id);
         if (task != null){
             return new ResponseEntity<>(task, HttpStatus.OK);
         }else {
@@ -47,26 +50,29 @@ public class TaskRestController  {
         }
     }
 
-    @PatchMapping ("{id}")
-    public ResponseEntity update (@PathVariable ("id") int id, @RequestBody Task task){
-        if (taskServices.vratTask(id) != null){
-            task.setId(id);
-            taskServices.aktualizujTask(id,task);
+    @DeleteMapping ("{id}")
+    public ResponseEntity deleteTask (@PathVariable("id") int id) {
+        if (taskServices.getTaskById(id) != null) {
+            taskServices.deleteTask(id);
             return ResponseEntity.ok().build();
-        }else {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("neexistuje");
+        } else {
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("Task with id: " + id + " doesnt exist");
         }
     }
 
-    @DeleteMapping ("{id}")
-    public ResponseEntity delete (@PathVariable ("id") int id){
-        if (taskServices.vratTask(id) != null){
-            taskServices.vymazTask(id);
+    @PatchMapping ("{id}")
+    public ResponseEntity updateTask (@PathVariable ("id") int id, @RequestBody Task task ){
+        if (taskServices.getTaskById(id) != null){
+            task.setId(id);
+            taskServices.updateTask(id, task);
             return ResponseEntity.ok().build();
         }else {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("doesn't exist");
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("Task with id = " + id + "doesnt exist");
         }
     }
+
+
+
 
 }
 

@@ -16,6 +16,8 @@ public class Task {
     private String description;
     @NonNull
     private Timestamp createdAt;
+    @NonNull
+    private String vek;
 
 
     public Task() {
